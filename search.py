@@ -209,9 +209,48 @@ def nullHeuristic(state, problem=None):
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """
+    Search the node that has the lowest combined cost and heuristic first.
+    """
+    from util import PriorityQueue
+
+    # Inicializar la cola de prioridad para A*
+    pq = PriorityQueue()
+    # Conjunto para mantener un registro de los estados visitados
+    visited = set()
+    
+    # Añadir el estado inicial a la cola de prioridad
+    # (estado, acciones, costo)
+    start_state = problem.getStartState()
+    start_h = heuristic(start_state, problem)
+    pq.push((start_state, [], 0), start_h)
+    
+    while not pq.isEmpty():
+        current_state, actions, current_cost = pq.pop()
+        
+        # Si el estado actual es el objetivo, devolver las acciones
+        if problem.isGoalState(current_state):
+            return actions
+        
+        # Si el estado no ha sido visitado, explorarlo
+        if current_state not in visited:
+            visited.add(current_state)
+            
+            # Obtener los sucesores del estado actual
+            for successor, action, step_cost in problem.getSuccessors(current_state):
+                if successor not in visited:
+                    # Calcular el nuevo costo g (costo real hasta ahora)
+                    new_cost = current_cost + step_cost
+                    # Calcular el costo h (heurístico estimado hasta el objetivo)
+                    h = heuristic(successor, problem)
+                    # Calcular el costo f total (f = g + h)
+                    f = new_cost + h
+                    new_actions = actions + [action]
+                    # Añadir el sucesor a la cola de prioridad
+                    pq.push((successor, new_actions, new_cost), f)
+    
+    # Si no se encuentra solución, devolver una lista vacía
+    return []
 
 
 # Abbreviations
