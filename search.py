@@ -126,21 +126,23 @@ def depthFirstSearch(problem):
     # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+    """
+    Search the shallowest nodes in the search tree first.
+    """
 
-    # Inicializar la pila para DFS
-    stack = util.Stack()
+
+    # Inicializar la cola para BFS
+    queue = util.Queue()
     # Conjunto para mantener un registro de los estados visitados
     visited = set()
     
-    # Añadir el estado inicial a la pila
+    # Añadir el estado inicial a la cola
     # (estado, acciones para llegar a este estado)
     start_state = problem.getStartState()
-    stack.push((start_state, []))
+    queue.push((start_state, []))
     
-    while not stack.isEmpty():
-        current_state, actions = stack.pop()
+    while not queue.isEmpty():
+        current_state, actions = queue.pop()
         
         # Si el estado actual es el objetivo, devolver las acciones
         if problem.isGoalState(current_state):
@@ -153,13 +155,12 @@ def breadthFirstSearch(problem):
             # Obtener los sucesores del estado actual
             for successor, action, _ in problem.getSuccessors(current_state):
                 if successor not in visited:
-                    # Añadir el sucesor a la pila con las acciones actualizadas
+                    # Añadir el sucesor a la cola con las acciones actualizadas
                     new_actions = actions + [action]
-                    stack.push((successor, new_actions))
+                    queue.push((successor, new_actions))
     
     # Si no se encuentra solución, devolver una lista vacía
     return []
-    # util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
