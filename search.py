@@ -163,9 +163,43 @@ def breadthFirstSearch(problem):
     return []
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """
+    Search the node of least total cost first.
+    """
+    from util import PriorityQueue
+
+    # Inicializar la cola de prioridad para UCS
+    pq = PriorityQueue()
+    # Conjunto para mantener un registro de los estados visitados
+    visited = set()
+    
+    # Añadir el estado inicial a la cola de prioridad
+    # (prioridad, estado, acciones, costo)
+    start_state = problem.getStartState()
+    pq.push((start_state, [], 0), 0)
+    
+    while not pq.isEmpty():
+        current_state, actions, current_cost = pq.pop()
+        
+        # Si el estado actual es el objetivo, devolver las acciones
+        if problem.isGoalState(current_state):
+            return actions
+        
+        # Si el estado no ha sido visitado, explorarlo
+        if current_state not in visited:
+            visited.add(current_state)
+            
+            # Obtener los sucesores del estado actual
+            for successor, action, step_cost in problem.getSuccessors(current_state):
+                if successor not in visited:
+                    # Calcular el nuevo costo y las nuevas acciones
+                    new_cost = current_cost + step_cost
+                    new_actions = actions + [action]
+                    # Añadir el sucesor a la cola de prioridad
+                    pq.push((successor, new_actions, new_cost), new_cost)
+    
+    # Si no se encuentra solución, devolver una lista vacía
+    return []
 
 def nullHeuristic(state, problem=None):
     """
