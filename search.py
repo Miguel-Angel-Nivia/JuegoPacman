@@ -128,7 +128,6 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    def depthFirstSearch(problem):
 
     # Inicializar la pila para DFS
     stack = util.Stack()
