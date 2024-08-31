@@ -87,78 +87,57 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
-    n = Directions.NORTH
-    e = Directions.EAST
 
-    # Inicializar la pila para DFS
+    # pila
     stack = util.Stack()
-    # Conjunto para mantener un registro de los estados visitados
+    # Conjunto visitados
     visited = set()
-    
     # Añadir el estado inicial a la pila
-    # (estado, acciones para llegar a este estado)
     start_state = problem.getStartState()
     stack.push((start_state, []))
-    
     while not stack.isEmpty():
         current_state, actions = stack.pop()
-        
-        # Si el estado actual es el objetivo, devolver las acciones
+        # final objetivo
         if problem.isGoalState(current_state):
             return actions
-        
         # Si el estado no ha sido visitado, explorarlo
         if current_state not in visited:
             visited.add(current_state)
-            
             # Obtener los sucesores del estado actual
             for successor, action, _ in problem.getSuccessors(current_state):
                 if successor not in visited:
                     # Añadir el sucesor a la pila con las acciones actualizadas
                     new_actions = actions + [action]
                     stack.push((successor, new_actions))
-
     # Si no se encuentra solución, devolver una lista vacía
     return []
-    # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """
     Search the shallowest nodes in the search tree first.
     """
 
-
-    # Inicializar la cola para BFS
+    # cola
     queue = util.Queue()
-    # Conjunto para mantener un registro de los estados visitados
+    # Conjunto visitados
     visited = set()
-    
     # Añadir el estado inicial a la cola
-    # (estado, acciones para llegar a este estado)
     start_state = problem.getStartState()
     queue.push((start_state, []))
-    
     while not queue.isEmpty():
         current_state, actions = queue.pop()
-        
-        # Si el estado actual es el objetivo, devolver las acciones
+        # fin objetivo
         if problem.isGoalState(current_state):
             return actions
-        
         # Si el estado no ha sido visitado, explorarlo
         if current_state not in visited:
             visited.add(current_state)
-            
             # Obtener los sucesores del estado actual
             for successor, action, _ in problem.getSuccessors(current_state):
                 if successor not in visited:
                     # Añadir el sucesor a la cola con las acciones actualizadas
                     new_actions = actions + [action]
                     queue.push((successor, new_actions))
-    
     # Si no se encuentra solución, devolver una lista vacía
     return []
 
@@ -166,29 +145,22 @@ def uniformCostSearch(problem):
     """
     Search the node of least total cost first.
     """
-    from util import PriorityQueue
 
-    # Inicializar la cola de prioridad para UCS
-    pq = PriorityQueue()
-    # Conjunto para mantener un registro de los estados visitados
+    # cola de prioridad
+    pq = util.PriorityQueue()
+    # Conjunto visitados
     visited = set()
-    
     # Añadir el estado inicial a la cola de prioridad
-    # (prioridad, estado, acciones, costo)
     start_state = problem.getStartState()
     pq.push((start_state, [], 0), 0)
-    
     while not pq.isEmpty():
         current_state, actions, current_cost = pq.pop()
-        
-        # Si el estado actual es el objetivo, devolver las acciones
+        # fin objetivo
         if problem.isGoalState(current_state):
             return actions
-        
         # Si el estado no ha sido visitado, explorarlo
         if current_state not in visited:
-            visited.add(current_state)
-            
+            visited.add(current_state)   
             # Obtener los sucesores del estado actual
             for successor, action, step_cost in problem.getSuccessors(current_state):
                 if successor not in visited:
@@ -196,8 +168,7 @@ def uniformCostSearch(problem):
                     new_cost = current_cost + step_cost
                     new_actions = actions + [action]
                     # Añadir el sucesor a la cola de prioridad
-                    pq.push((successor, new_actions, new_cost), new_cost)
-    
+                    pq.push((successor, new_actions, new_cost), new_cost) 
     # Si no se encuentra solución, devolver una lista vacía
     return []
 
@@ -212,30 +183,23 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.
     """
-    from util import PriorityQueue
 
-    # Inicializar la cola de prioridad para A*
-    pq = PriorityQueue()
-    # Conjunto para mantener un registro de los estados visitados
+    # cola prioridad
+    pq = util.PriorityQueue()
+    # Conjunto visitados
     visited = set()
-    
     # Añadir el estado inicial a la cola de prioridad
-    # (estado, acciones, costo)
     start_state = problem.getStartState()
     start_h = heuristic(start_state, problem)
     pq.push((start_state, [], 0), start_h)
-    
     while not pq.isEmpty():
         current_state, actions, current_cost = pq.pop()
-        
-        # Si el estado actual es el objetivo, devolver las acciones
+        # fin objetivo
         if problem.isGoalState(current_state):
             return actions
-        
         # Si el estado no ha sido visitado, explorarlo
         if current_state not in visited:
             visited.add(current_state)
-            
             # Obtener los sucesores del estado actual
             for successor, action, step_cost in problem.getSuccessors(current_state):
                 if successor not in visited:
@@ -248,10 +212,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     new_actions = actions + [action]
                     # Añadir el sucesor a la cola de prioridad
                     pq.push((successor, new_actions, new_cost), f)
-    
     # Si no se encuentra solución, devolver una lista vacía
     return []
-
 
 # Abbreviations
 bfs = breadthFirstSearch
