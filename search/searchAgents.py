@@ -40,6 +40,7 @@ from game import Actions
 import util
 import time
 import search
+import random
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -349,7 +350,6 @@ class CornersProblem(search.SearchProblem):
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]: return 999999
         return len(actions)
-
 
 def cornersHeuristic(state, problem):
     """

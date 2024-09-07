@@ -17,7 +17,7 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
-import util
+import util, random
 
 class SearchProblem:
     """
@@ -215,8 +215,95 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     # Si no se encuentra solución, devolver una lista vacía
     return []
 
+def geneticSearch(problem):
+    """Search using genetic algorithm."""
+    
+    def initialize_population(size):
+        return [random_actions(problem) for _ in range(size)]
+    
+    def random_actions(problem):
+        actions = []
+        state = problem.getStartState()
+        while not problem.isGoalState(state):
+            successors = problem.getSuccessors(state)
+            if not successors:
+                return None  # No solution
+            state, action, _ = random.choice(successors)
+            actions.append(action)
+        return actions
+    
+    def evaluate_fitness(actions):
+        if actions is None:
+            return 0
+        return 1.0 / (problem.getCostOfActions(actions) + 1)
+    
+    def select_parents(population, fitness_scores):
+        total_fitness = sum(fitness_scores)
+        selection_probs = [f / total_fitness for f in fitness_scores]
+        return [roulette_wheel_selection(population, selection_probs) for _ in range(len(population))]
+    
+    def roulette_wheel_selection(population, probabilities):
+        r = random.random()
+        for i, individual in enumerate(population):
+            if r <= sum(probabilities[:i+1]):
+                return individual
+    
+    def crossover(parent1, parent2):
+        if parent1 is None or parent2 is None:
+            return parent1 if parent2 is None else parent2
+        crossover_point = random.randint(1, min(len(parent1), len(parent2)) - 1)
+        child = parent1[:crossover_point] + parent2[crossover_point:]
+        return child
+    
+    def mutate(actions):
+        if actions is None:
+            return None
+        if len(actions) <= 1:
+            return actions
+        i = random.randint(0, len(actions) - 1)
+        state = problem.getStartState()
+        for j in range(i):
+            state, _, _ = problem.getSuccessors(state)[0]
+        successors = problem.getSuccessors(state)
+        if successors:
+            _, new_action, _ = random.choice(successors)
+            actions[i] = new_action
+        return actions
+
+    # Genetic Algorithm parameters
+    population_size = 50
+    generations = 50
+    mutation_rate = 0.1
+
+    # Initialize population
+    population = initialize_population(population_size)
+
+    for _ in range(generations):
+        # Evaluate fitness
+        fitness_scores = [evaluate_fitness(individual) for individual in population]
+        
+        # Select parents
+        parents = select_parents(population, fitness_scores)
+        
+        # Create new population
+        new_population = []
+        while len(new_population) < population_size:
+            parent1, parent2 = random.sample(parents, 2)
+            child = crossover(parent1, parent2)
+            if random.random() < mutation_rate:
+                child = mutate(child)
+            new_population.append(child)
+        
+        population = new_population
+
+    # Return best solution
+    best_individual = max(population, key=evaluate_fitness)
+    # print(best_individual)  # Visualizacion tiempo y ruta
+    return best_individual
+
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+gen = geneticSearch
