@@ -231,12 +231,12 @@ def geneticSearch(problem):
             state, action, _ = random.choice(successors)
             actions.append(action)
         return actions
-    
+
     def evaluate_fitness(actions):
         if actions is None:
             return 0
         return 1.0 / (problem.getCostOfActions(actions) + 1)
-    
+
     def select_parents(population, fitness_scores):
         total_fitness = sum(fitness_scores)
         selection_probs = [f / total_fitness for f in fitness_scores]
@@ -254,7 +254,7 @@ def geneticSearch(problem):
         crossover_point = random.randint(1, min(len(parent1), len(parent2)) - 1)
         child = parent1[:crossover_point] + parent2[crossover_point:]
         return child
-    
+
     def mutate(actions):
         if actions is None:
             return None
@@ -271,8 +271,8 @@ def geneticSearch(problem):
         return actions
 
     # Genetic Algorithm parameters
-    population_size = 50
-    generations = 50
+    population_size = 5
+    generations = 5
     mutation_rate = 0.1
 
     # Initialize population
